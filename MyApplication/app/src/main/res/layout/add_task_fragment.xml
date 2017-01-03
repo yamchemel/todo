@@ -4,20 +4,29 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"/>
+
     <EditText android:id="@+id/edit_task"
         android:layout_weight="1"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:maxLines="1"
         android:lines="1"
+        android:nextFocusUp="@id/edit_task"
+        android:nextFocusLeft="@id/edit_task"
         android:hint="@string/edit_task" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/add_task_button"
         android:text="@string/button_add"
         android:clickable="false"
-    android:onClick="addTask" />
+        android:onClick="addTask" />
     <Button
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"

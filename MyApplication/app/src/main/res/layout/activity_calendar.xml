@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CalendarActivity">
+    <fragment
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:id="@+id/calendar_fragment_id"
+        class="com.example.yamc.myapplication.CalendarFragment"/>
+</LinearLayout>
+
+
+<!--<FrameLayout xmlns:tools="http://schemas.android.com/tools"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--xmlns:android="http://schemas.android.com/apk/res/android">-->
+    <!--<CalendarView android:layout_height="match_parent" android:layout_width="match_parent"-->
+        <!--android:minDate="04/05/1992"-->
+        <!--android:maxDate="04/11/1992">-->
+
+    <!--</CalendarView>-->
+<!--</FrameLayout>-->

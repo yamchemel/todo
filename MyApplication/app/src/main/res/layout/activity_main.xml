@@ -6,16 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
     <fragment
-
         android:layout_height="50dp"
         android:layout_width="match_parent"
         android:id="@+id/add_tasks_fragment_id"
         class="com.example.yamc.myapplication.AddTaskFragment"/>
 
     <fragment
-        android:layout_height="match_parent"
+        android:layout_height="400dp"
         android:layout_width="match_parent"
         android:id="@+id/tasks_list_fragment_id"
         class="com.example.yamc.myapplication.TasksListFragment"/>
+
+    <fragment
+        android:layout_height="50dp"
+        android:layout_width="match_parent"
+        android:id="@+id/schedule_fragments_id"
+        class="com.example.yamc.myapplication.ScheduleFragment"/>
+
 <!--TODO: Add task list here-->
 </LinearLayout>

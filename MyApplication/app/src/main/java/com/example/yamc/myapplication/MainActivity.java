@@ -17,22 +17,11 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
-import static com.example.yamc.myapplication.R.attr.title;
-
-import android.widget.ListView;
-
-import com.example.yamc.myapplication.data.TaskContract;
-import com.example.yamc.myapplication.data.TaskDbHelper;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     public final static String EXTRA_MESSAGE = "com.example.myapplication.MESSAGE";
@@ -48,13 +37,17 @@ public class MainActivity extends AppCompatActivity {
         Button button = (Button) findViewById(R.id.add_task_button);
         button.setEnabled(false);
 
+        // Don't display keyboard in startup.
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+
         EditText editText = (EditText) findViewById(R.id.edit_task);
         editText.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View view, int keyCode, KeyEvent keyevent) {
                 //If the keyevent is a key-down event on the "enter" button
                 Log.d("KeyCode", Integer.toString(keyCode));
                 if ((keyevent.getAction() == KeyEvent.ACTION_DOWN) &&
-                        (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == 66)) {
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
                     addTask(view);
                     return true;
                 }
@@ -99,8 +92,15 @@ public class MainActivity extends AppCompatActivity {
         TasksListFragment tasksListFragment = (TasksListFragment) getSupportFragmentManager().findFragmentById(R.id.tasks_list_fragment_id);
         tasksListFragment.addNewTask(new_user_task);
 
-        editText.setText("");
+        // Remove keyboard after task was entered.
+        InputMethodManager inputManager =
+                (InputMethodManager) getApplicationContext().
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(
+                this.getCurrentFocus().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
 
+        editText.setText("");
     }
 
     public void clearAllTasks(View view) {
@@ -113,4 +113,13 @@ public class MainActivity extends AppCompatActivity {
         tasksListFragment.deleteTask(view);
     }
 
+    public void schedule(View view) {
+        Intent intent = new Intent(this, CalendarActivity.class);
+//        EditText editText = (EditText) findViewById(R.id.edit_message);
+//        String message = editText.getText().toString();
+//        intent.putEitText = (EditText) findViewById(R.id.edit_message);
+//        String message = editText.getText().toString();
+//        intent.putExtra(EXTRA_MESSAGE, message);
+        startActivity(intent);
+    }
 }
