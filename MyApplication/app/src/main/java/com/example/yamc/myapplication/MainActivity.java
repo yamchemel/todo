@@ -113,13 +113,8 @@ public class MainActivity extends AppCompatActivity {
         tasksListFragment.deleteTask(view);
     }
 
-    public void schedule(View view) {
+    public void showCalendar(View view) {
         Intent intent = new Intent(this, CalendarActivity.class);
-//        EditText editText = (EditText) findViewById(R.id.edit_message);
-//        String message = editText.getText().toString();
-//        intent.putEitText = (EditText) findViewById(R.id.edit_message);
-//        String message = editText.getText().toString();
-//        intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
     }
 }

@@ -1,29 +1,65 @@
 package com.example.yamc.myapplication;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.yamc.myapplication.data.TaskContract;
 import com.example.yamc.myapplication.data.TaskDbHelper;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import static android.content.ContentValues.TAG;
+
+class TaskListAdapter extends ArrayAdapter<Task> {
+    private List<Task> tasks;
+
+    public TaskListAdapter(Context context, int textViewResourceId, List<Task> tasks) {
+        super(context, textViewResourceId, tasks);
+        this.tasks = tasks;
+    }
+    public View getView(int position, View convertView, ViewGroup parent) {
+        View row;
+        if (null == convertView) {
+            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            row = inflater.inflate(R.layout.list_item_task, null);
+        } else {
+            row = convertView;
+        }
+
+        Task task = (Task) getItem(position);
+
+        TextView tv = (TextView) row.findViewById(R.id.list_item_task_textview);
+        tv.setText(task.description);
+
+        if (task.is_scheduled) {
+            row.setBackgroundColor(Color.parseColor("#FFE070")); // yellow
+        } else {
+            row.setBackgroundColor(Color.WHITE);
+        }
+
+
+        return row;
+    }
+
+}
+
 public class TasksListFragment extends Fragment {
 
-    ArrayAdapter<String> mTaskAdapter;
+    TaskListAdapter mTaskAdapter;
 
     public TasksListFragment() {
     }
@@ -37,40 +73,36 @@ public class TasksListFragment extends Fragment {
         return rootView;
     }
 
-    public void deleteTask(View view) {
-        View parentRow = (View) view.getParent();
-        ListView listView = (ListView) parentRow.getParent();
-        final int position = listView.getPositionForView(parentRow);
-        SQLiteDatabase db = new TaskDbHelper(getContext()).getReadableDatabase();
-        // Query should match readDb().
-        Cursor cursor = db.query(
-                TaskContract.TaskEntry.TABLE_NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                TaskContract.TaskEntry._ID +" DESC",
-                String.valueOf(position) + "," + String.valueOf(position+1));
-        if (cursor.moveToFirst()) {
-            int idx = cursor.getColumnIndex(TaskContract.TaskEntry._ID);
-            int row_id = cursor.getInt(idx);
-            db.delete(TaskContract.TaskEntry.TABLE_NAME, TaskContract.TaskEntry._ID +  "=" + row_id, null);
-        }
+    @Override
+    public void onResume() {
+        super.onResume();
+        renderDbUserTasks(getView());
+    }
+
+    public void deleteTask(View deleteButton) {
+        // Get clicked task.
+        Task task = mTaskAdapter.getItem(getPositionOfTaskToDelete(deleteButton));
+
+        // Delete task from db.
+        SQLiteDatabase db = new TaskDbHelper(getContext()).getWritableDatabase();
+        db.delete(TaskContract.TaskEntry.TABLE_NAME, TaskContract.TaskEntry._ID +  "=" + task.id, null);
 
         renderDbUserTasks(getView());
-
     }
-//
-//    }
+
+    private int getPositionOfTaskToDelete(View deleteButton) {
+        View taskRow = (View) deleteButton.getParent();
+        ListView listView = (ListView) taskRow.getParent();
+        return listView.getPositionForView(taskRow);
+    }
 
     private void renderDbUserTasks(View rootView) {
-        List<String> dbUserTasks = readDb();
+        List<Task> dbUserTasks = readDb();
         renderTasks(rootView, dbUserTasks);
     }
 
-    private List<String> readDb() {
-        ArrayList<String> dbUserTasks = new ArrayList<String>();
+    private List<Task> readDb() {
+        ArrayList<Task> dbUserTasks = new ArrayList<Task>();
         SQLiteDatabase db = new TaskDbHelper(getContext()).getReadableDatabase();
         Cursor cursor = db.query(
                 TaskContract.TaskEntry.TABLE_NAME,
@@ -83,8 +115,7 @@ public class TasksListFragment extends Fragment {
 
         if (cursor.moveToFirst()) {
             do {
-                int idx = cursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_DESCRIPTION);
-                dbUserTasks.add(cursor.getString(idx));
+                dbUserTasks.add(new Task(cursor));
             } while (cursor.moveToNext());
         }
 
@@ -92,13 +123,13 @@ public class TasksListFragment extends Fragment {
         return dbUserTasks;
     }
 
-    private void renderTasks(View rootView, List<String> userTasks) {
-        mTaskAdapter =
-                new ArrayAdapter<String>(
-                        getActivity(),
-                        R.layout.list_item_task,
-                        R.id.list_item_task_textview,
-                        userTasks);
+
+
+    private void renderTasks(View rootView, List<Task> userTasks) {
+        mTaskAdapter = new TaskListAdapter(
+                getActivity(),
+                R.id.list_item_task_textview,
+                userTasks);
 
         ListView listView = (ListView) rootView.findViewById(R.id.listview_task);
         listView.setAdapter(mTaskAdapter);

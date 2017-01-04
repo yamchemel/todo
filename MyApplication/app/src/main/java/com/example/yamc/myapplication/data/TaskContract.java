@@ -11,5 +11,7 @@ public class TaskContract {
         public static final String TABLE_NAME = "task";
         public static final String COLUMN_DESCRIPTION = "description";
         public static final String COLUMN_DATE_CREATED = "date_created";
+        public static final String COLUMN_IS_SCHEDULED = "is_scheduled";
+        public static final String COLUMN_DATE_SCHEDULED = "date_scheduled";
     }
 }

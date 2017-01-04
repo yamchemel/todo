@@ -6,13 +6,10 @@
     android:layout_alignParentBottom="true">
 
     <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:id="@+id/schedule_button"
-        android:text="@string/schedule"
-        android:background="@drawable/rounded_botton"
-        android:textColor="?attr/colorButtonNormal"
-        android:onClick="schedule" />
-    <!--android:clickable="false"-->
+        android:background="@android:drawable/ic_menu_my_calendar"
+        android:onClick="showCalendar" />
 
 </LinearLayout>

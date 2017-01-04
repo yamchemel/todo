@@ -12,7 +12,7 @@ import com.example.yamc.myapplication.data.TaskContract.TaskEntry;
 
 public class TaskDbHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     static final String DATABASE_NAME = "task.db";
 
@@ -32,7 +32,9 @@ public class TaskDbHelper extends SQLiteOpenHelper {
 
                 // the ID of the location entry associated with this weather data
                 TaskEntry.COLUMN_DESCRIPTION + " TEXT NOT NULL, " +
-                TaskEntry.COLUMN_DATE_CREATED + " INTEGER NOT NULL " +
+                TaskEntry.COLUMN_DATE_CREATED + " TEXT NOT NULL, " +
+                TaskEntry.COLUMN_IS_SCHEDULED + " INTEGER DEFAULT 0, " +
+                TaskEntry.COLUMN_DATE_SCHEDULED + " TEXT " +
                 ");";
         sqLiteDatabase.execSQL(SQL_CREATE_WEATHER_TABLE);
     }

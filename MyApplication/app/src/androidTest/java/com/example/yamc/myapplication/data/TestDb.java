@@ -30,7 +30,7 @@ public class TestDb extends AndroidTestCase {
     public void testCreateDb() throws Throwable {
 
         final HashSet<String> tableNameHashSet = new HashSet<String>();
-        tableNameHashSet.add(TaskContract.TaskEntry.TABLE_NAME);
+        tableNameHashSet.add(TaskContract.ScheduledTaskEntry.TABLE_NAME);
 
         mContext.deleteDatabase(TaskDbHelper.DATABASE_NAME);
         SQLiteDatabase db = new TaskDbHelper(context).getWritableDatabase();
@@ -46,16 +46,16 @@ public class TestDb extends AndroidTestCase {
         } while( c.moveToNext() );
         assertTrue("database was created without task entry", tableNameHashSet.isEmpty());
 
-        c = db.rawQuery("PRAGMA table_info(" + TaskContract.TaskEntry.TABLE_NAME + ")",
+        c = db.rawQuery("PRAGMA table_info(" + TaskContract.ScheduledTaskEntry.TABLE_NAME + ")",
                 null);
 
         assertTrue("Error: This means that we were unable to query the database for table information.",
                 c.moveToFirst());
 
         final HashSet<String> taskColumnHashSet = new HashSet<String>();
-        taskColumnHashSet.add(TaskContract.TaskEntry._ID);
-        taskColumnHashSet.add(TaskContract.TaskEntry.COLUMN_DATE_CREATED);
-        taskColumnHashSet.add(TaskContract.TaskEntry.COLUMN_DESCRIPTION);
+        taskColumnHashSet.add(TaskContract.ScheduledTaskEntry._ID);
+        taskColumnHashSet.add(TaskContract.ScheduledTaskEntry.COLUMN_DATE_CREATED);
+        taskColumnHashSet.add(TaskContract.ScheduledTaskEntry.COLUMN_DESCRIPTION);
 
         int columnNameIndex = c.getColumnIndex("name");
         do {
@@ -76,14 +76,14 @@ public class TestDb extends AndroidTestCase {
         assertTrue(db.isOpen());
 
         ContentValues taskValues = new ContentValues();
-        taskValues.put(TaskContract.TaskEntry.COLUMN_DATE_CREATED, 123);
-        taskValues.put(TaskContract.TaskEntry.COLUMN_DESCRIPTION, "Some test task");
+        taskValues.put(TaskContract.ScheduledTaskEntry.COLUMN_DATE_CREATED, 123);
+        taskValues.put(TaskContract.ScheduledTaskEntry.COLUMN_DESCRIPTION, "Some test task");
 
         long taskRowId;
-        taskRowId = db.insert(TaskContract.TaskEntry.TABLE_NAME, null, taskValues);
+        taskRowId = db.insert(TaskContract.ScheduledTaskEntry.TABLE_NAME, null, taskValues);
 
         Cursor cursor = db.query(
-                TaskContract.TaskEntry.TABLE_NAME,
+                TaskContract.ScheduledTaskEntry.TABLE_NAME,
                 null,
                 null,
                 null,
